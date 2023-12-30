@@ -19,6 +19,7 @@ class PegawaiController extends Controller
         return view('pegawai.index', $data);
     }
 
+
     public function read()
     {
         // $data = Pegawai::all();
@@ -142,6 +143,7 @@ class PegawaiController extends Controller
             return ApiHelpers::createAPI(500, 'Failed');
         }
     }
+
 
 
         //     $data = Pegawai::find($id);

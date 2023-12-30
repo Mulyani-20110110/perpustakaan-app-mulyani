@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ApiHelpers;
 use App\Models\Book;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -50,6 +52,37 @@ class BookController extends Controller
         return redirect('book')->with('success', 'Tambah Data Berhasil');
     }
 
+    public function store2(Request $request)
+    {
+        try
+        {
+          $request->validate([
+            'nama_book' => 'required',
+            'nama_author' => 'required',
+            'no_isbn' => 'required',
+            'tahun_terbit' => 'required'
+          ]);
+
+          $book = Book::create([
+            'nama_book' => $request->nama_book,
+            'nama_author' => $request->nama_author,
+            'no_isbn' => $request->no_isbn,
+            'tahun_terbit' => $request->tahun_terbit
+          ]);
+
+          $data = Book::where('id','=', $book->id)->get();
+          return redirect('book')->with('success', 'Tambah Data Berhasil');
+            if($data){
+                return ApiHelpers::createAPI(200, 'Success', $data);
+            } else {
+                return ApiHelpers::createAPI(400, 'Failed');
+            }
+
+        } catch(Exception $error) {
+            return ApiHelpers::createAPI(500, 'Failed');
+        }
+    }
+
     public function show($id)
     {
         $book = Book::find($id);
@@ -62,6 +95,7 @@ class BookController extends Controller
             'book' => $book
         ]);
     }
+
     public function edit(Book $book)
     {
         $data['title'] = 'Ubah Data';
